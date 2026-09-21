@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
+import { DocumentsModule } from './documents/documents.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
@@ -19,6 +20,9 @@ import { HealthModule } from './health/health.module';
         DATABASE_PASSWORD: Joi.string().required(),
         REDIS_URL: Joi.string().uri().required(),
         MINIO_ENDPOINT: Joi.string().uri().required(),
+        MINIO_ACCESS_KEY: Joi.string().required(),
+        MINIO_SECRET_KEY: Joi.string().min(8).required(),
+        MINIO_BUCKET: Joi.string().default('agentiq-documents'),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -34,6 +38,7 @@ import { HealthModule } from './health/health.module';
         synchronize: false,
       }),
     }),
+    DocumentsModule,
     HealthModule,
   ],
 })
